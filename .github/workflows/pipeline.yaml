@@ -1,8 +1,13 @@
 name: Demo Logs Collector
+permissions:
+  actions: read
+  contents: read
 on:
   push:
     branches:
       - main
+
+  
   workflow_dispatch:
 
 jobs:
