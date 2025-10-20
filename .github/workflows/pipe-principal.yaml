@@ -15,14 +15,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Disparar workflow de logs en otro repo
-        uses: peter-evans/workflow-dispatch@v1
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}   # PAT con repo + actions:read
-          repository: IsaacCanache/pipelines            # repo donde vive logs.yml
-          workflow: logs.yml
-          ref: main
-          inputs:
-            run_id: "pjjpñ"
-            
+      - name: Disparar workflow de logs en otro repo vía API
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/IsaacCanache/pipelines/actions/workflows/logs.yml/dispatches \
+            -d "{\"ref\":\"main\",\"inputs\":{\"run_id\":\"${{ github.run_id }}\",\"repositorio\":\"${{ github.repository }}\"}}"
+
 
