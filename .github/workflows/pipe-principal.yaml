@@ -2,7 +2,7 @@ name: Main Workflow
 
 on:
   push:
-    branches: dev
+    branches: main
   workflow_dispatch:
 
 jobs:
@@ -13,8 +13,9 @@ jobs:
 
   trigger-logs:
     needs: build
-    uses:  rebel-quest-interactive/devops-template-pipelines/.github/workflows/nestjs-cicd-central.yml@v9.0.0
+    uses:  IsaacCanache/pipelines/.github/workflows/logs.yaml@619b152025a9069685e258159a3c49f27f969327
     with:
+        run_id: ${{ github.run_id }}
         repositorio: ${{ github.repository }}
 
 
