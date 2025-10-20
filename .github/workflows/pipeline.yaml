@@ -37,3 +37,18 @@ jobs:
         with:
           name: full-run-logs
           path: logs.zip
+      - name: Descomprimir logs
+        run: |
+          mkdir logs
+          unzip logs.zip -d logs
+
+      - name: Listar contenido de logs
+        run: |
+          echo "Archivos extraídos:"
+          ls -R logs
+
+      - name: Subir logs como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-run-logs
+          path: logs
