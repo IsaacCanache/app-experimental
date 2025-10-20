@@ -2,7 +2,7 @@ name: Main Workflow
 
 on:
   push:
-    branches: main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -13,10 +13,16 @@ jobs:
 
   trigger-logs:
     needs: build
-    uses: IsaacCanache/pipelines/.github/workflows/logs.yml@cb382d3c992f84ffb1b1a3a8bb20cd14cb97749b
-    with:
-      run_id: ${{ github.run_id }}
-      repositorio: ${{ github.repository }}
-
-
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar workflow de logs en otro repo
+        uses: peter-evans/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}   # PAT con repo + actions:read
+          repository: IsaacCanache/pipelines            # repo donde vive logs.yml
+          workflow: logs.yml
+          ref: main
+          inputs:
+            run_id: "pjjpñ"
+            
 
