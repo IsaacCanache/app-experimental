@@ -31,7 +31,12 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs \
             -o logs.zip
-            
+
+      - name: Debug respuesta de API
+        run: |
+          cat logs.zip | head -40
+      
+                  
       - name: Verificar archivo
         run: file logs.zip
 
