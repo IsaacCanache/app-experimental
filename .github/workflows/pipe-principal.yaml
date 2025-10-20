@@ -1,0 +1,22 @@
+name: Main Workflow
+
+on:
+  push:
+    branches: dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Job principal ejecutándose..."
+
+  trigger-logs:
+    needs: build
+    uses:  rebel-quest-interactive/devops-template-pipelines/.github/workflows/nestjs-cicd-central.yml@v9.0.0
+    with:
+        repositorio: ${{ github.repository }}
+
+
+
+
