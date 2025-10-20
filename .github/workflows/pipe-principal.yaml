@@ -13,11 +13,10 @@ jobs:
 
   trigger-logs:
     needs: build
-    uses:  IsaacCanache/pipelines/.github/workflows/logs.yaml@1b5997c6a03706d7d0e511bb4c7aad7c2eda4e26
+    uses: IsaacCanache/pipelines/.github/workflows/logs.yml@cb382d3c992f84ffb1b1a3a8bb20cd14cb97749b
     with:
-        run_id: ${{ github.run_id }}
-        repositorio: ${{ github.repository }}
-
+      run_id: ${{ github.run_id }}
+      repositorio: ${{ github.repository }}
 
 
 
