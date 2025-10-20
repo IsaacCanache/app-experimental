@@ -1,13 +1,13 @@
 name: Demo Logs Collector
+
 permissions:
   actions: read
   contents: read
+
 on:
   push:
     branches:
       - main
-
-  
   workflow_dispatch:
 
 jobs:
@@ -17,51 +17,27 @@ jobs:
       - name: Step 1
         run: echo "Hola desde el job uno."
 
-  job-two:
-    runs-on: ubuntu-latest
-    needs: job-one
-    steps:
-      - name: Step 2
-        run: echo "Hola desde el job dos"
-
   collect-logs:
     runs-on: ubuntu-latest
-    needs: [job-one, job-two]
-    if: always()   # se ejecuta siempre, aunque falle algún job
+    needs: [job-one]
+    if: always()
     steps:
-      - name: Descargar logs del run
-        run: |
-          curl -sSL \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs \
-            -o logs.zip
+      - name: Instalar GitHub CLI
+        run: sudo apt-get update && sudo apt-get install -y gh
 
-      - name: Debug respuesta de API
-        run: |
-          cat logs.zip | head -40
-      
-                  
-      - name: Verificar archivo
-        run: file logs.zip
+      - name: Autenticarse con GITHUB_TOKEN
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
-      - name: Subir logs como artefacto
-        uses: actions/upload-artifact@v4
-        with:
-          name: full-run-logs
-          path: logs.zip
-      - name: Descomprimir logs
-        run: |
-          mkdir logs
-          unzip logs.zip -d logs
+      - name: Descargar logs del run actual
+        run: gh run download ${{ github.run_id }} --log --dir logs
 
-      - name: Listar contenido de logs
-        run: |
-          echo "Archivos extraídos:"
-          ls -R logs
+      - name: Listar contenido
+        run: ls -R logs
 
       - name: Subir logs como artefacto
         uses: actions/upload-artifact@v4
         with:
           name: full-run-logs-${{ github.run_id }}
           path: logs
+
+
